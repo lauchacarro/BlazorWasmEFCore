@@ -1,0 +1,65 @@
+﻿@page "/remote-linq"
+
+@using Remote.Linq.Async
+
+@inject RemoteLinqContext Context
+
+
+<h1>Remote Linq Table</h1>
+
+<PageTitle>Remote Linq Table</PageTitle>
+
+
+<p>Este componente demuestra como SOLICITAR la información NECESARIA a la WebApi que tiene EFCore</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<WeatherForecast>? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //Este absurdo Linq es para demostrar que se pueden hacer más cosas que un Where con Remote.Linq
+
+        forecasts = await Context.WeatherForecasts
+        .Where(x => x.TemperatureC > 3 && (x.Summary!.ToLower().Contains("a") || x.Summary.ToLower().Contains("c")))
+        .Select(x => new WeatherForecast
+            {
+                Date = x.Date,
+                TemperatureC = x.TemperatureC,
+                TemperatureF = x.TemperatureF,
+                Summary = x.Summary,
+            })
+            .Take(10)
+            .Take(5)
+        .ToListAsync();
+    }
+}
