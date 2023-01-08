@@ -15,7 +15,7 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseInMemoryDatabase("ServerDatabase"));
+builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite("Filename=appserver.db"));
 
 var app = builder.Build();
 
@@ -55,7 +55,10 @@ void SeedData()
     var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    context.WeatherForecasts.AddRange(WeatherForecastHelper.GetWeatherForecasts(100).WithId());
+    if (!context.WeatherForecasts.Any())
+    {
+        context.WeatherForecasts.AddRange(WeatherForecastHelper.GetWeatherForecasts(100).WithId());
 
-    context.SaveChanges();
+        context.SaveChanges();
+    }
 }

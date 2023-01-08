@@ -8,6 +8,7 @@ namespace BlazorWasmEFCore.Server.Data
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public DbSet<WeatherForecast> WeatherForecasts => Set<WeatherForecast>();

@@ -23,7 +23,8 @@ namespace BlazorWasmEFCore.Server.Controllers
         }
 
         [HttpPost]
-        public DynamicObject Query([FromBody] RemoteQuery query) => query.Expression!.ExecuteWithEntityFrameworkCore(_context)!;
+        public DynamicObject Query([FromBody] RemoteQuery query) 
+            => query.Expression!.ExecuteWithEntityFrameworkCore(_context)!;
 
     }
 }

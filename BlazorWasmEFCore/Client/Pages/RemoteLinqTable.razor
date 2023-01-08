@@ -47,7 +47,7 @@ else
     protected override async Task OnInitializedAsync()
     {
 
-        //Este absurdo Linq es para demostrar que se pueden hacer más cosas que un Where con Remote.Linq
+        //Este absurdo Linq es para demostrar que se pueden hacer más que un Where con Remote.Linq
 
         forecasts = await Context.WeatherForecasts
         .Where(x => x.TemperatureC > 3 && (x.Summary!.ToLower().Contains("a") || x.Summary.ToLower().Contains("c")))
